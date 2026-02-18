@@ -1,0 +1,4 @@
+name: CustomCurrencies
+version: '1.0.000-snapshot'
+main: org.brentloaf.customCurrencies.CustomCurrencies
+api-version: '1.21'
