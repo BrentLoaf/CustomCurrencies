@@ -2,3 +2,9 @@ name: CustomCurrencies
 version: '1.0.000-snapshot'
 main: org.brentloaf.customCurrencies.CustomCurrencies
 api-version: '1.21'
+commands:
+  create_currency:
+    usage: /create_currency <currency_name> <material>
+  create_bank:
+    usage: /create_bank <bank_name>
+

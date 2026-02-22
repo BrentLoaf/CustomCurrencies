@@ -1,17 +1,21 @@
 package org.brentloaf.customCurrencies;
 
+import org.brentloaf.customCurrencies.commands.CreateBank;
+import org.brentloaf.customCurrencies.commands.CreateCurrency;
+import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CustomCurrencies extends JavaPlugin {
 
+    public static CustomCurrencies plugin;
+
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        plugin = this;
 
-    }
+        CreateBank.init(plugin);
+        CreateCurrency.init(plugin);
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+        RegisterBankVault.init(plugin);
     }
 }
