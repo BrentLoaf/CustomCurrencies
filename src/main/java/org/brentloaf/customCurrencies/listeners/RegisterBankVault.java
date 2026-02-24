@@ -1,6 +1,6 @@
 package org.brentloaf.customCurrencies.listeners;
 
-import org.brentloaf.customCurrencies.bank.currency.Currency;
+import org.brentloaf.customCurrencies.currency.Currency;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -1,6 +1,7 @@
 package org.brentloaf.customCurrencies.bank;
 
-import org.brentloaf.customCurrencies.bank.currency.Currency;
+import org.brentloaf.customCurrencies.currency.Currency;
+import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class Bank {
 
     private final UUID ownerUUID;
     private String name;
-    private List<Currency> ownedCurrencies = new ArrayList<>();
+    private List<UUID> ownedCurrencies = new ArrayList<>();
 
     public Bank(String name, Player owner) {
         this.name = name;
@@ -27,10 +28,10 @@ public class Bank {
     }
 
     public List<Currency> getOwnedCurrencies() {
-        return ownedCurrencies;
+        return CurrencyRegistry.getLoadedCurrencies().stream().filter(c -> ownedCurrencies.contains(c.getUuid())).toList();
     }
 
     public void addCurrency(Currency currency) {
-        ownedCurrencies.add(currency);
+        ownedCurrencies.add(currency.getUuid());
     }
 }

@@ -1,9 +1,9 @@
 package org.brentloaf.customCurrencies.commands;
 
-import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.brentloaf.customCurrencies.bank.Bank;
 import org.brentloaf.customCurrencies.bank.BankRegistry;
-import org.brentloaf.customCurrencies.bank.currency.Currency;
+import org.brentloaf.customCurrencies.currency.Currency;
+import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
 import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,10 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CreateCurrency implements CommandExecutor {
 
-    private int MAXIMUM_ARGS = 2;
-    private int MINIMUM_ARGS = 2;
+    private int MAXIMUM_ARGS = 11;
+    private int MINIMUM_ARGS = 3;
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
@@ -37,19 +40,44 @@ public class CreateCurrency implements CommandExecutor {
             return false;
         }
 
-        String materialName = strings[1];
+        String backedMaterialName = strings[1];
         Material backedMaterial;
         try {
-            backedMaterial = Material.valueOf(materialName);
+            backedMaterial = Material.valueOf(backedMaterialName);
         } catch (Exception e) {
-            player.sendMessage(ChatColor.RED + "This isn't a valid material.");
+            player.sendMessage(ChatColor.RED + "This isn't a valid backed material.");
+            return false;
+        }
+
+        List<Material> materialIngredients = new ArrayList<>();
+        for (int i = 3; i < strings.length; i++) {
+            String ingredientName = strings[i];
+            Material ingredientMaterial;
+
+            try {
+                ingredientMaterial = Material.valueOf(ingredientName);
+            } catch (Exception e) {
+                player.sendMessage(ChatColor.RED + ingredientName + "  isn't a valid backed material.");
+                return false;
+            }
+
+            materialIngredients.add(ingredientMaterial);
+        }
+
+        String itemMaterialName = strings[2];
+        Material itemMaterial;
+        try {
+            itemMaterial = Material.valueOf(itemMaterialName);
+        } catch (Exception e) {
+            player.sendMessage(ChatColor.RED + "This isn't a valid coin material.");
             return false;
         }
 
         String currencyName = strings[0];
         Bank bank = BankRegistry.getBank(player);
-        Currency newCurrency = new Currency(bank, currencyName, backedMaterial);
+        Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
         bank.addCurrency(newCurrency);
+        CurrencyRegistry.addCurrency(newCurrency);
         RegisterBankVault.addCurrencyToListen(player, newCurrency);
         player.sendMessage(ChatColor.GREEN + "You have created the currency " + currencyName + ", please select a vault location by right-clicking a barrel.");
         return true;

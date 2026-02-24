@@ -9,7 +9,9 @@ public class BankRegistry {
 
     private static List<Bank> loadedBanks = new ArrayList<>();
 
-    public BankRegistry() {}
+    public static List<Bank> getLoadedBanks() {
+        return loadedBanks;
+    }
 
     public static void addBank(Bank bank) {
         loadedBanks.add(bank);
