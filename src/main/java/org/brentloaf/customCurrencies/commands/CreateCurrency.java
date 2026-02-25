@@ -10,14 +10,16 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateCurrency implements CommandExecutor {
+public class CreateCurrency implements CommandExecutor, TabCompleter {
 
     private int MAXIMUM_ARGS = 11;
     private int MINIMUM_ARGS = 3;
@@ -81,6 +83,16 @@ public class CreateCurrency implements CommandExecutor {
         RegisterBankVault.addCurrencyToListen(player, newCurrency);
         player.sendMessage(ChatColor.GREEN + "You have created the currency " + currencyName + ", please select a vault location by right-clicking a barrel.");
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        int argLength = strings.length;
+
+        return switch (argLength) {
+            case 1 -> List.of();
+            default -> List.of(Material.values()).stream().filter(m -> m != Material.AIR).map(Material::name).toList();
+        };
     }
 
     public static void init(JavaPlugin plugin) {

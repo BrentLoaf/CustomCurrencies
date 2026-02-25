@@ -6,12 +6,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class GetCurrency implements CommandExecutor {
+import java.util.List;
+
+public class GetCurrency implements CommandExecutor, TabCompleter {
 
     private final int MAXIMUM_ARGS = 1;
     private final int MINIMUM_ARGS = 1;
@@ -51,6 +55,16 @@ public class GetCurrency implements CommandExecutor {
         player.getInventory().addItem(coin);
         player.sendMessage(ChatColor.GREEN + "You have been given 1 " + currency.getName() + " coin.");
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        int argLength = strings.length;
+
+        return switch (argLength) {
+            case 1 -> CurrencyRegistry.getLoadedCurrencies().stream().map(Currency::getRawName).toList();
+            default -> List.of();
+        };
     }
 
     public static void init(JavaPlugin plugin) {

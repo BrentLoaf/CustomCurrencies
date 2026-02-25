@@ -60,6 +60,10 @@ public class Currency {
         return name;
     }
 
+    public String getRawName() {
+        return name.toLowerCase().replace(" ", "_");
+    }
+
     public Material getBackedMaterial() {
         return backedMaterial;
     }

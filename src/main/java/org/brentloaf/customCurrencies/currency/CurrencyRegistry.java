@@ -1,5 +1,6 @@
 package org.brentloaf.customCurrencies.currency;
 
+import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -25,7 +26,13 @@ public class CurrencyRegistry {
     }
 
     public static @Nullable Currency getFromName(String name) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getName().equals(name)).toList();
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getName().equalsIgnoreCase(name)).toList();
+        if (currencies.isEmpty()) return null;
+        return currencies.getFirst();
+    }
+
+    public static @Nullable Currency getFromKey(NamespacedKey key) {
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getCraftingKey().equals(key)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
     }
