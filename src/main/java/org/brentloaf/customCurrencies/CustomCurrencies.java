@@ -4,8 +4,8 @@ import org.brentloaf.customCurrencies.commands.CreateBank;
 import org.brentloaf.customCurrencies.commands.CreateCurrency;
 import org.brentloaf.customCurrencies.commands.GetCurrency;
 import org.brentloaf.customCurrencies.commands.GetCurrencyValue;
-import org.brentloaf.customCurrencies.listeners.CraftCurrency;
-import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
+import org.brentloaf.customCurrencies.events.ItemDeleteEvent;
+import org.brentloaf.customCurrencies.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CustomCurrencies extends JavaPlugin {
@@ -20,8 +20,12 @@ public final class CustomCurrencies extends JavaPlugin {
         CreateCurrency.init(plugin);
         GetCurrencyValue.init(plugin);
         GetCurrency.init(plugin);
+        RegisterItemUse.init(plugin);
+        ItemUseListener.init(plugin);
 
         RegisterBankVault.init(plugin);
         CraftCurrency.init(plugin);
+        RegisterItemDelete.init(plugin);
+        ItemDeleteListener.init(plugin);
     }
 }

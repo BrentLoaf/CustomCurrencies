@@ -1,6 +1,11 @@
 package org.brentloaf.customCurrencies.currency;
 
+import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,9 +36,22 @@ public class CurrencyRegistry {
         return currencies.getFirst();
     }
 
-    public static @Nullable Currency getFromKey(NamespacedKey key) {
+    public static @Nullable Currency getFromCraftKey(NamespacedKey key) {
         List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getCraftingKey().equals(key)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
+    }
+
+    public static @Nullable Currency getFromItem(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return null;
+
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(CustomCurrencies.plugin, "currency");
+
+        if (!data.has(key)) return null;
+        UUID uuid = UUID.fromString(data.get(key, PersistentDataType.STRING));
+
+        return getFromUuid(uuid);
     }
 }

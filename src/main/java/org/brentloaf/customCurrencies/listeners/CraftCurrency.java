@@ -25,7 +25,7 @@ public class CraftCurrency implements Listener {
         if (!(event.getRecipe() instanceof Keyed keyed)) return;
         NamespacedKey craftingKey = keyed.getKey();
 
-        Currency currency = CurrencyRegistry.getFromKey(craftingKey);
+        Currency currency = CurrencyRegistry.getFromCraftKey(craftingKey);
         if (currency == null) return;
 
         ItemStack result = event.getCurrentItem();

@@ -30,7 +30,7 @@ public class RegisterBankVault implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) return;
 
         Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock.getType() != Material.BARREL) {
+        if (clickedBlock == null || clickedBlock.getType() != Material.BARREL) {
             player.sendMessage(ChatColor.YELLOW + "The block you select as a vault must be a barrel.");
             return;
         }
@@ -46,6 +46,7 @@ public class RegisterBankVault implements Listener {
         player.sendMessage(ChatColor.GREEN + "The barrel at " + x + ", " + y + ", " + z + " is now a vault location for " + currency.getName());
 
         currenciesToListen.remove(player);
+        event.setCancelled(true);
     }
 
     public static void addCurrencyToListen(Player player, Currency currency) {

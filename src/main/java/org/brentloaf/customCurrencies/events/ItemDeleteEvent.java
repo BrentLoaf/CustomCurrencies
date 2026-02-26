@@ -7,12 +7,15 @@ import org.bukkit.inventory.ItemStack;
 public class ItemDeleteEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
+
     private final ItemStack item;
     private final int amount;
+    private final Class<? extends Event> classType;
 
-    public ItemDeleteEvent(ItemStack item, int amount) {
+    public ItemDeleteEvent(ItemStack item, int amount, Event event) {
         this.item = item;
         this.amount = amount;
+        this.classType = event.getClass();
     }
 
     public ItemStack getItem() {
@@ -21,6 +24,10 @@ public class ItemDeleteEvent extends Event {
 
     public int getAmount() {
         return amount;
+    }
+
+    public Class<? extends Event> getClassType() {
+        return classType;
     }
 
     @Override
