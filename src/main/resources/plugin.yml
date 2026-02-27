@@ -3,6 +3,8 @@ version: '1.0.000-snapshot'
 main: org.brentloaf.customCurrencies.CustomCurrencies
 api-version: '1.21'
 commands:
+  add_vault:
+    usage: /add_vault <currency_name>
   get_currency:
     usage: /get_currency <currency_name>
   get_currency_value:

@@ -190,7 +190,7 @@ public class RegisterItemUse implements Listener {
         Inventory clicked = event.getClickedInventory();
         if (clicked == null) return;
 
-        boolean isIllegal = ILLEGAL_INVENTORIES.stream().anyMatch(cls -> cls.isInstance(clicked));
+        boolean isIllegal = ILLEGAL_INVENTORIES.stream().anyMatch(i -> i.isInstance(clicked));
         if (!isIllegal) return;
 
         Player player = (Player) event.getWhoClicked();

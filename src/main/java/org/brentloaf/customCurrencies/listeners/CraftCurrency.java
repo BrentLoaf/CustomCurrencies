@@ -36,14 +36,12 @@ public class CraftCurrency implements Listener {
         if (clickType.isShiftClick()) {
             if (!(event.getWhoClicked() instanceof Player player)) return;
 
-            ItemStack itemToCount = currency.getCoinItem();
-
             ItemStack[] oldContents = player.getInventory().getContents();
-            int oldAmount = countItemsInInventory(oldContents, itemToCount);
+            int oldAmount = countItemsInInventory(oldContents, currency);
 
             Bukkit.getScheduler().runTask(CustomCurrencies.plugin, task -> {
                 ItemStack[] newContents = player.getInventory().getContents();
-                int newAmount = countItemsInInventory(newContents, itemToCount);
+                int newAmount = countItemsInInventory(newContents, currency);
 
                 int totalGained = newAmount - oldAmount;
                 currency.setInCirculation(currency.getInCirculation() + totalGained);
@@ -51,12 +49,12 @@ public class CraftCurrency implements Listener {
         } else currency.setInCirculation(currency.getInCirculation() + 1);
     }
 
-    public int countItemsInInventory(ItemStack[] contents, ItemStack item) {
+    public int countItemsInInventory(ItemStack[] contents, Currency currency) {
         int amount = 0;
 
         for (ItemStack inSlot : contents) {
             if (inSlot == null || inSlot.getType() == Material.AIR) continue;
-            if (!inSlot.isSimilar(item)) continue;
+            if (!currency.isCurrency(inSlot)) continue;
             amount += inSlot.getAmount();
         }
 

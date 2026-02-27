@@ -75,7 +75,7 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        String currencyName = strings[0];
+        String currencyName = strings[0].replace("_", " ");
         Bank bank = BankRegistry.getBank(player);
         Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
         bank.addCurrency(newCurrency);

@@ -31,7 +31,7 @@ public class CurrencyRegistry {
     }
 
     public static @Nullable Currency getFromName(String name) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getName().equalsIgnoreCase(name)).toList();
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getRawName().equalsIgnoreCase(name)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
     }

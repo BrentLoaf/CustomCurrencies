@@ -1,48 +1,47 @@
 package org.brentloaf.customCurrencies.commands;
 
-import org.brentloaf.customCurrencies.bank.Bank;
-import org.brentloaf.customCurrencies.bank.BankRegistry;
 import org.brentloaf.customCurrencies.currency.Currency;
 import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GetCurrencyValue implements CommandExecutor, TabCompleter {
+public class AddVault implements CommandExecutor, TabCompleter {
 
     private int MAXIMUM_ARGS = 1;
     private int MINIMUM_ARGS = 1;
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        if (!(commandSender instanceof Player player)) {
+            commandSender.sendMessage(ChatColor.RED + "This command is only usable by players.");
+            return false;
+        }
+
         int argLength = strings.length;
         if (argLength < MINIMUM_ARGS || argLength > MAXIMUM_ARGS) {
-            commandSender.sendMessage("Wrong number of arguments used.");
+            player.sendMessage("Wrong number of arguments used.");
             return false;
         }
 
         String currencyName = strings[0];
         Currency currency = CurrencyRegistry.getFromName(currencyName);
         if (currency == null) {
-            commandSender.sendMessage(ChatColor.RED + "The currency " + currencyName + " was not found.");
+            player.sendMessage(ChatColor.RED + "The currency " + currencyName + " was not found.");
             return false;
         }
 
-        double value = currency.getValue();
-        if (value == -1) {
-            commandSender.sendMessage(ChatColor.YELLOW + "No value of " + currencyName + " was found.");
-            return false;
-        }
-
-        String materialName = currency.getBackedMaterial().name().toLowerCase().replace("_", " ") + "(s)";
-        commandSender.sendMessage(ChatColor.GREEN + "The value of " + currency.getName() + " is " + value + " " + materialName + " per coin.");
+        player.sendMessage(ChatColor.GREEN + "Right-click shift a barrel to make it a new vault for " + currency.getName() + ".");
+        RegisterBankVault.addCurrencyToListen(player, currency);
         return true;
     }
 
@@ -57,6 +56,6 @@ public class GetCurrencyValue implements CommandExecutor, TabCompleter {
     }
 
     public static void init(JavaPlugin plugin) {
-        plugin.getCommand("get_currency_value").setExecutor(new GetCurrencyValue());
+        plugin.getCommand("add_vault").setExecutor(new AddVault());
     }
 }

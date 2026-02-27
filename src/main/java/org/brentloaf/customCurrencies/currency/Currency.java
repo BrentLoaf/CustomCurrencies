@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -31,16 +32,18 @@ public class Currency {
     public Currency(Bank ownedBank, String name,  Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
         this.ownedBank = ownedBank;
         this.uuid = UUID.randomUUID();
-        this.name = name;
+        this.name = name.replace("_", " ");
         this.backedMaterial = backedMaterial;
         this.coinItem = new ItemStack(coinMaterial);
         this.coinItem.editMeta(meta -> {
             meta.setDisplayName(ChatColor.YELLOW + this.name);
             PersistentDataContainer data = meta.getPersistentDataContainer();
             data.set(new NamespacedKey(CustomCurrencies.plugin, "currency"), PersistentDataType.STRING, uuid.toString());
+
+            meta.setLore(List.of(ChatColor.YELLOW + "Value: N/A"));
         });
 
-        this.craftingKey = new NamespacedKey(CustomCurrencies.plugin, "craft_" + name);
+        this.craftingKey = new NamespacedKey(CustomCurrencies.plugin, "craft_" + getRawName());
 
         ShapelessRecipe recipe = new ShapelessRecipe(this.craftingKey, this.coinItem);
         for (Material material : materialIngredients) recipe.addIngredient(material);
@@ -145,5 +148,30 @@ public class Currency {
         }
 
         return count;
+    }
+
+    public void updateItem(ItemStack item) {
+        double value = getValue();
+        String materialName = backedMaterial.name().toLowerCase().replace("_", " ");
+        String valueString = value == -1 ?
+                "Value: N/A" :
+                "Value: " + value + " " + materialName + "(s) per coin ";
+
+        item.editMeta(meta -> {
+            meta.setLore(List.of(ChatColor.YELLOW + valueString));
+        });
+    }
+
+    public boolean isCurrency(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) return false;
+
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(CustomCurrencies.plugin, "currency");
+        if (!data.has(key)) return false;
+
+        UUID currencyUuid = UUID.fromString(data.get(key, PersistentDataType.STRING));
+
+        return currencyUuid.equals(uuid);
     }
 }

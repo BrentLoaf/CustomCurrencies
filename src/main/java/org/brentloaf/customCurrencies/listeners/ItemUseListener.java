@@ -25,9 +25,6 @@ public class ItemUseListener implements Listener {
 
         Class<? extends Event> classType = event.getClassType();
 
-        Bukkit.getLogger().info("============Item Use============");
-        Bukkit.getLogger().info("Class Trigger: " + classType);
-
         Player player = event.getPlayer();
         if (!(classType.isAssignableFrom(PlayerInteractEvent.class)) && player != null) player.sendMessage(ChatColor.YELLOW + "You can't do this with a currency.");
         event.setCancelled(true);
