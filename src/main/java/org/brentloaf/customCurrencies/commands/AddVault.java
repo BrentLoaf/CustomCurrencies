@@ -40,6 +40,11 @@ public class AddVault implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        if (!currency.isOwner(player)) {
+            player.sendMessage(ChatColor.RED + "You are not the owner of this currency.");
+            return false;
+        }
+
         player.sendMessage(ChatColor.GREEN + "Right-click shift a barrel to make it a new vault for " + currency.getName() + ".");
         RegisterBankVault.addCurrencyToListen(player, currency);
         return true;
@@ -47,10 +52,11 @@ public class AddVault implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+        if (!(commandSender instanceof Player player)) return List.of();
         int argLength = strings.length;
 
         return switch (argLength) {
-            case 1 -> CurrencyRegistry.getLoadedCurrencies().stream().map(Currency::getRawName).toList();
+            case 1 -> CurrencyRegistry.getLoadedCurrencies().stream().filter(c -> c.isOwner(player)).map(Currency::getRawName).toList();
             default -> List.of();
         };
     }

@@ -33,12 +33,17 @@ public class CreateBank implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        String bankName = strings[0].replace("_", " ");
+        if (BankRegistry.nameTaken(bankName)) {
+            player.sendMessage(ChatColor.RED + "This bank name already taken.");
+            return false;
+        }
+
         if (BankRegistry.hasBank(player)) {
             player.sendMessage(ChatColor.RED + "You can only own a single bank at a time.");
             return false;
         }
 
-        String bankName = strings[0];
         Bank bank = new Bank(bankName, player);
         BankRegistry.addBank(bank);
         player.sendMessage(ChatColor.GREEN + "You have created the bank " + bankName + ".");

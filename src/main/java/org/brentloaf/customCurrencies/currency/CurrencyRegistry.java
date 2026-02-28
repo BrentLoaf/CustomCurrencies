@@ -1,6 +1,7 @@
 package org.brentloaf.customCurrencies.currency;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -8,15 +9,15 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 public class CurrencyRegistry {
 
-    private static List<Currency> loadedCurrencies = new ArrayList<>();
+    private static HashSet<Currency> loadedCurrencies = new HashSet<>();
 
-    public static List<Currency> getLoadedCurrencies() {
+    public static HashSet<Currency> getLoadedCurrencies() {
         return loadedCurrencies;
     }
 
@@ -53,5 +54,13 @@ public class CurrencyRegistry {
         UUID uuid = UUID.fromString(data.get(key, PersistentDataType.STRING));
 
         return getFromUuid(uuid);
+    }
+
+    public static boolean hasVault(Location location) {
+        return loadedCurrencies.stream().anyMatch(c -> c.hasVault(location));
+    }
+
+    public static boolean nameTaken(String string) {
+        return loadedCurrencies.stream().anyMatch(c -> c.getRawName().equalsIgnoreCase(string.replace(" ", "_")));
     }
 }

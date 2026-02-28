@@ -27,6 +27,14 @@ public class Bank {
         return name;
     }
 
+    public boolean isOwner(Player player) {
+        return player.getUniqueId().equals(ownerUUID);
+    }
+
+    public String getRawName() {
+        return name.toLowerCase().replace(" ", "_");
+    }
+
     public List<Currency> getOwnedCurrencies() {
         return CurrencyRegistry.getLoadedCurrencies().stream().filter(c -> ownedCurrencies.contains(c.getUuid())).toList();
     }

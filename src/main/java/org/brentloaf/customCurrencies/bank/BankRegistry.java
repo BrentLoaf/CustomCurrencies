@@ -28,4 +28,8 @@ public class BankRegistry {
     public static Bank getBank(Player player) {
         return loadedBanks.stream().filter(b -> b.getOwnerUUID().equals(player.getUniqueId())).toList().getFirst();
     }
+
+    public static boolean nameTaken(String string) {
+        return loadedBanks.stream().anyMatch(b -> b.getRawName().equalsIgnoreCase(string.replace(" ", "_")));
+    }
 }

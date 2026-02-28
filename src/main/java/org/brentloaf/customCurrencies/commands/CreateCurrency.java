@@ -42,6 +42,12 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        String currencyName = strings[0].replace("_", " ");
+        if (CurrencyRegistry.nameTaken(currencyName)) {
+            player.sendMessage(ChatColor.RED + "This currency name already taken.");
+            return false;
+        }
+
         String backedMaterialName = strings[1];
         Material backedMaterial;
         try {
@@ -75,7 +81,6 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        String currencyName = strings[0].replace("_", " ");
         Bank bank = BankRegistry.getBank(player);
         Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
         bank.addCurrency(newCurrency);

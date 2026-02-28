@@ -3,14 +3,12 @@ package org.brentloaf.customCurrencies.listeners;
 import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.brentloaf.customCurrencies.currency.Currency;
 import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
-import org.bukkit.Bukkit;
-import org.bukkit.Keyed;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -28,14 +26,21 @@ public class CraftCurrency implements Listener {
         Currency currency = CurrencyRegistry.getFromCraftKey(craftingKey);
         if (currency == null) return;
 
-        ItemStack result = event.getCurrentItem();
-        if (result == null) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
+        if (!currency.isOwner(player)) {
+            player.sendMessage(ChatColor.YELLOW + "You can only craft currencies you own.");
+            event.setCancelled(true);
+            return;
+        }
 
         ClickType clickType = event.getClick();
+        if (clickType.isCreativeAction()) {
+            event.setCancelled(true);
+            return;
+        }
 
         if (clickType.isShiftClick()) {
-            if (!(event.getWhoClicked() instanceof Player player)) return;
-
             ItemStack[] oldContents = player.getInventory().getContents();
             int oldAmount = countItemsInInventory(oldContents, currency);
 
@@ -59,6 +64,15 @@ public class CraftCurrency implements Listener {
         }
 
         return amount;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onCraftItem(CrafterCraftEvent event) {
+        Keyed keyed = event.getRecipe();
+        NamespacedKey craftingKey = keyed.getKey();
+
+        Currency currency = CurrencyRegistry.getFromCraftKey(craftingKey);
+        if (currency != null) event.setCancelled(true);
     }
 
     public static void init(JavaPlugin plugin) {

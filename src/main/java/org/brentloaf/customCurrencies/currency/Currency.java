@@ -6,6 +6,7 @@ import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -13,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class Currency {
     private int inCirculation;
     private NamespacedKey craftingKey;
     private ItemStack coinItem;
-    private List<Location> vaultLocations = new ArrayList<>();
+    private HashSet<Location> vaultLocations = new HashSet<>();
 
     public Currency(Bank ownedBank, String name,  Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
         this.ownedBank = ownedBank;
@@ -83,7 +84,7 @@ public class Currency {
         return craftingKey;
     }
 
-    public List<Location> getVaultLocations() {
+    public HashSet<Location> getVaultLocations() {
         return vaultLocations;
     }
 
@@ -93,6 +94,14 @@ public class Currency {
 
     public void addVault(Location vaultLocation) {
         vaultLocations.add(vaultLocation);
+    }
+
+    public boolean hasVault(Location location) {
+        return vaultLocations.contains(location);
+    }
+
+    public boolean isOwner(Player player) {
+        return ownedBank.isOwner(player);
     }
 
     public double getValue() {

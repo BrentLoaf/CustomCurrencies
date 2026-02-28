@@ -1,6 +1,10 @@
 package org.brentloaf.customCurrencies.listeners;
 
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.brentloaf.customCurrencies.currency.Currency;
+import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,7 +29,14 @@ public class RegisterBankVault implements Listener {
         Player player = event.getPlayer();
         if (!currenciesToListen.containsKey(player)) return;
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && player.isSneaking()) return;
+        if (!player.isSneaking()) {
+            player.sendMessage(ChatColor.GREEN + "You have stopped selecting vaults.");
+            currenciesToListen.remove(player);
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         if (event.getHand() != EquipmentSlot.HAND) return;
 
@@ -35,17 +46,21 @@ public class RegisterBankVault implements Listener {
             return;
         }
 
-        Currency currency = currenciesToListen.get(player);
         Location selectedLocation = clickedBlock.getLocation();
+        if (CurrencyRegistry.hasVault(selectedLocation)) {
+            player.sendMessage(ChatColor.YELLOW + "Vault locations can only be selected once.");
+            return;
+        }
+
+        Currency currency = currenciesToListen.get(player);
         currency.addVault(selectedLocation);
-        currenciesToListen.remove(player);
+        player.sendActionBar(Component.text(ChatColor.GREEN + "If you wish to stop selecting vaults, you can right-click a barrel without shifting."));
 
         int x = (int) selectedLocation.x();
         int y = (int) selectedLocation.y();
         int z = (int) selectedLocation.z();
         player.sendMessage(ChatColor.GREEN + "The barrel at " + x + ", " + y + ", " + z + " is now a vault location for " + currency.getName());
 
-        currenciesToListen.remove(player);
         event.setCancelled(true);
     }
 
