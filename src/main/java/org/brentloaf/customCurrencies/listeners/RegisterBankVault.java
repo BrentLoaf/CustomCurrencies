@@ -1,8 +1,6 @@
 package org.brentloaf.customCurrencies.listeners;
 
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.brentloaf.customCurrencies.currency.Currency;
 import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;

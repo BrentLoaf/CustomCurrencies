@@ -180,7 +180,8 @@ public class RegisterItemUse implements Listener {
             SmithingInventory.class,
             AnvilInventory.class,
             EnchantingInventory.class,
-            CraftingInventory.class
+            CraftingInventory.class,
+            MerchantInventory.class
     );
 
     @EventHandler(priority = EventPriority.LOWEST)
