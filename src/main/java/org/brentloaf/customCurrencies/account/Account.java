@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Account {
 
     private final UUID ownerUuid;
-    private HashMap<Currency, Integer> balances = new HashMap<>();
+    private HashMap<UUID, Integer> balances = new HashMap<>();
 
     public Account(Player owner) {
         this.ownerUuid = owner.getUniqueId();
@@ -19,7 +19,7 @@ public class Account {
         return ownerUuid;
     }
 
-    public HashMap<Currency, Integer> getBalances() {
+    public HashMap<UUID, Integer> getBalances() {
         return balances;
     }
 
@@ -28,12 +28,12 @@ public class Account {
     }
 
     public int get(Currency currency) {
-        return balances.getOrDefault(currency, 0);
+        return balances.getOrDefault(currency.getUuid(), 0);
     }
 
     public void deposit(Player player, Currency currency, int amount) {
         int currentAmount = balances.getOrDefault(currency, 0);
-        balances.put(currency, currentAmount + amount);
+        balances.put(currency.getUuid(), currentAmount + amount);
         currency.removeAmount(player, amount);
     }
 }
