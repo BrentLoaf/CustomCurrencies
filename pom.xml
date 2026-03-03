@@ -6,7 +6,7 @@
 
     <groupId>org.brentloaf</groupId>
     <artifactId>customcurrencies</artifactId>
-    <version>1.0.100-snapshot</version>
+    <version>1.0.101-snapshot</version>
     <packaging>jar</packaging>
 
     <name>customcurrencies</name>

@@ -172,6 +172,8 @@ public class Currency {
     }
 
     public boolean isCurrency(ItemStack itemStack) {
+        if (itemStack == null) return false;
+
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return false;
 
