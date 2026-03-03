@@ -18,6 +18,7 @@ public final class CustomCurrencies extends JavaPlugin {
         GetCurrency.init(plugin);
         AddVault.init(plugin);
         Deposit.init(plugin);
+        GetBalance.init(plugin);
 
         RegisterItemUse.init(plugin);
         ItemUseListener.init(plugin);

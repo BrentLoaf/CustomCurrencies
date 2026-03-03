@@ -27,6 +27,10 @@ public class Account {
         return player.getUniqueId().equals(ownerUuid);
     }
 
+    public int get(Currency currency) {
+        return balances.getOrDefault(currency, 0);
+    }
+
     public void deposit(Player player, Currency currency, int amount) {
         int currentAmount = balances.getOrDefault(currency, 0);
         balances.put(currency, currentAmount + amount);
