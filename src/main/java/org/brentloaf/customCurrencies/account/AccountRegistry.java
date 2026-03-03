@@ -10,14 +10,14 @@ public class AccountRegistry {
     private static HashSet<Account> loadedAccounts = new HashSet<>();
 
     public static @NotNull Account getAccount(Player player) {
-        Account account = loadedAccounts.stream().filter(a -> a.isOwner(player)).toList().getFirst();
-        if (account != null) {
-            return account;
-        } else {
-            Account newAccount = new Account(player);
-            addAccount(newAccount);
-            return newAccount;
-        }
+       return loadedAccounts.stream()
+                .filter(a -> a.isOwner(player))
+                .findFirst()
+                .orElseGet(() -> {
+                    Account newAccount = new Account(player);
+                    addAccount(newAccount);
+                    return newAccount;
+                });
     }
 
     private static void addAccount(Account account) {
