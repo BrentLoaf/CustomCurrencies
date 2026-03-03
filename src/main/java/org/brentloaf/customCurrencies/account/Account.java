@@ -1,0 +1,35 @@
+package org.brentloaf.customCurrencies.account;
+
+import org.brentloaf.customCurrencies.currency.Currency;
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.UUID;
+
+public class Account {
+
+    private final UUID ownerUuid;
+    private HashMap<Currency, Integer> balances = new HashMap<>();
+
+    public Account(Player owner) {
+        this.ownerUuid = owner.getUniqueId();
+    }
+
+    public UUID getOwnerUuid() {
+        return ownerUuid;
+    }
+
+    public HashMap<Currency, Integer> getBalances() {
+        return balances;
+    }
+
+    public boolean isOwner(Player player) {
+        return player.getUniqueId().equals(ownerUuid);
+    }
+
+    public void deposit(Player player, Currency currency, int amount) {
+        int currentAmount = balances.getOrDefault(currency, 0);
+        balances.put(currency, currentAmount + amount);
+        currency.removeAmount(player, amount);
+    }
+}

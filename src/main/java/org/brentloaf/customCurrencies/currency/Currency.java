@@ -183,4 +183,39 @@ public class Currency {
 
         return currencyUuid.equals(uuid);
     }
+
+    public int getAmount(Inventory inventory) {
+        ItemStack[] items = inventory.getContents();
+        int current = 0;
+
+        for (ItemStack item : items) {
+            if (!isCurrency(item)) continue;
+            current +=  item.getAmount();
+        }
+
+        return current;
+    }
+
+    public void removeAmount(Player player, int amount) {
+        int remaining = amount;
+
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item == null) continue;
+            if (!isCurrency(item)) continue;
+
+            int itemAmount = item.getAmount();
+
+            if (itemAmount <= remaining) {
+                remaining -= itemAmount;
+                item.setAmount(0);
+            } else {
+                item.setAmount(itemAmount - remaining);
+                remaining = 0;
+            }
+
+            if (remaining <= 0) break;
+        }
+
+        player.updateInventory();
+    }
 }

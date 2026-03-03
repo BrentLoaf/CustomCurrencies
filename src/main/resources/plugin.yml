@@ -3,6 +3,10 @@ version: '1.0.000-snapshot'
 main: org.brentloaf.customCurrencies.CustomCurrencies
 api-version: '1.21'
 commands:
+  deposit:
+    usage: /withdraw <currency_name> <amount>
+  withdraw:
+    usage: /withdraw <currency_name> <amount>
   add_vault:
     usage: /add_vault <currency_name>
   get_currency:
