@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -219,5 +220,20 @@ public class Currency {
         }
 
         player.updateInventory();
+    }
+
+    public boolean giveCoins(Player player, int amount) {
+        Inventory inventory = player.getInventory();
+
+        Inventory temp = Bukkit.createInventory(null, 36);
+        temp.setStorageContents(inventory.getStorageContents());
+
+        ItemStack coins = coinItem.asQuantity(amount);
+        HashMap<Integer, ItemStack> leftOver = temp.addItem(coins);
+
+        if (leftOver.isEmpty()) {
+            inventory.addItem(coins);
+            return true;
+        } else return false;
     }
 }

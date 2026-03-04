@@ -1,6 +1,7 @@
 package org.brentloaf.customCurrencies.account;
 
 import org.brentloaf.customCurrencies.currency.Currency;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -32,8 +33,18 @@ public class Account {
     }
 
     public void deposit(Player player, Currency currency, int amount) {
-        int currentAmount = balances.getOrDefault(currency, 0);
+        int currentAmount = balances.getOrDefault(currency.getUuid(), 0);
         balances.put(currency.getUuid(), currentAmount + amount);
         currency.removeAmount(player, amount);
+    }
+
+    public boolean withdraw(Player player, Currency currency, int amount) {
+        boolean wasAdded = currency.giveCoins(player, amount);
+        if (wasAdded) {
+            balances.computeIfPresent(currency.getUuid(), (k, current) -> current - amount);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
