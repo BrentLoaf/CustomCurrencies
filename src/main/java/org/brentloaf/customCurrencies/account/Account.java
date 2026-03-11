@@ -1,7 +1,6 @@
 package org.brentloaf.customCurrencies.account;
 
 import org.brentloaf.customCurrencies.currency.Currency;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
