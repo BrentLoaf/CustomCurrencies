@@ -16,9 +16,17 @@ public class Database {
             statement.execute("""
                 CREATE TABLE IF NOT EXISTS accountTable (
                     ownerUuid TEXT NOT NULL,
-                    currency TEXT NOT NULL,
+                    currencyUuid TEXT NOT NULL,
                     balance INT NOT NULL,
-                    PRIMARY KEY (ownerUuid, currency)
+                    PRIMARY KEY (ownerUuid, currencyUuid)
+                )
+            """);
+
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS bankTable (
+                    ownerUuid TEXT NOT NULL,
+                    bankName TEXT NOT NULL,
+                    PRIMARY KEY (ownerUuid, bankName)
                 )
             """);
         }
