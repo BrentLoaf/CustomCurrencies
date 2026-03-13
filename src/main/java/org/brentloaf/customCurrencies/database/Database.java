@@ -20,21 +20,25 @@ public class Database {
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
 
         try (Statement statement = connection.createStatement()) {
-            statement.execute("""
-                CREATE TABLE IF NOT EXISTS bankTable (
-                    id TEXT NOT NULL,
-                    bankName TEXT NOT NULL,
-                    ownerId TEXT NOT NULL,
-                    currenciesIds TEXT NOT NULL,
-                    PRIMARY KEY (uuid, bankName, ownerUuid)
-                )
-            """);
+            BankQuery.init(statement);
         }
     }
 
     public static class BankQuery {
 
         public static final String TABLE_NAME = "bankTable";
+
+        private static void init(Statement statement) throws SQLException {
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS bankTable (
+                    id TEXT NOT NULL,
+                    bankName TEXT NOT NULL,
+                    ownerId TEXT NOT NULL,
+                    currenciesIds TEXT NOT NULL,
+                    PRIMARY KEY (id, bankName, ownerId)
+                )
+            """);
+        }
 
         public static void add(UUID ownerId, String name) {
             String sql = "INSERT INTO " + TABLE_NAME + " (id, bankName, ownerId, currenciesIds) VALUES (?, ?, ?, ?)";

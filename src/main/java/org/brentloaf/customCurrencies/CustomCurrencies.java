@@ -1,10 +1,12 @@
 package org.brentloaf.customCurrencies;
 
+import jdk.jfr.StackTrace;
 import org.brentloaf.customCurrencies.commands.*;
 import org.brentloaf.customCurrencies.database.Database;
 import org.brentloaf.customCurrencies.listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.SQLException;
 
 public final class CustomCurrencies extends JavaPlugin {
@@ -17,9 +19,12 @@ public final class CustomCurrencies extends JavaPlugin {
         plugin = this;
 
         try {
-            database = new Database(plugin.getDataFolder().getAbsolutePath() + "/playerToons.db");
+            File folder = plugin.getDataFolder();
+            if (!folder.exists()) folder.mkdirs();
+
+            database = new Database(folder.getAbsolutePath() + "/playerToons.db");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         CreateBank.init(plugin);
