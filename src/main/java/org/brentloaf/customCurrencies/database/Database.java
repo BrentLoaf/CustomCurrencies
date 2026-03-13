@@ -134,6 +134,31 @@ public class Database {
             return bank;
         }
 
+        public static @Nullable Bank getFromId(UUID bankId) {
+            String sql = "SELECT bankName, ownerId, id, currenciesIds FROM " + TABLE_NAME + " WHERE id = ?";
+
+            Bank bank = null;
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, bankId.toString());
+
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        String name = result.getString(1);
+                        UUID ownerId = UUID.fromString(result.getString(2));
+                        UUID id = UUID.fromString(result.getString(3));
+                        List<UUID> currencyIds = fromJson(result.getString(4));
+
+                        bank = new Bank(name, ownerId, id, currencyIds);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            return bank;
+        }
+
         private static final Gson gson = new Gson();
 
         private static List<UUID> fromJson(String json) {

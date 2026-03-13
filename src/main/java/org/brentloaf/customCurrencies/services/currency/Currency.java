@@ -1,6 +1,8 @@
 package org.brentloaf.customCurrencies.services.currency;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
+import org.brentloaf.customCurrencies.database.Database;
+import org.brentloaf.customCurrencies.services.bank.Bank;
 import org.brentloaf.customCurrencies.services.bank.OldBank;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
@@ -21,7 +23,7 @@ import java.util.UUID;
 
 public class Currency {
 
-    private final OldBank ownedBank;
+    private final UUID ownedBankId;
 
     private UUID uuid;
     private String name;
@@ -31,8 +33,8 @@ public class Currency {
     private ItemStack coinItem;
     private HashSet<Location> vaultLocations = new HashSet<>();
 
-    public Currency(OldBank ownedBank, String name, Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
-        this.ownedBank = ownedBank;
+    public Currency(Bank ownedBank, String name, Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
+        this.ownedBankId = ownedBank.id();
         this.uuid = UUID.randomUUID();
         this.name = name.replace("_", " ");
         this.backedMaterial = backedMaterial;
@@ -53,8 +55,8 @@ public class Currency {
         Bukkit.addRecipe(recipe);
     }
 
-    public OldBank getOwnedBank() {
-        return ownedBank;
+    public Bank getOwnedBank() {
+        return Database.BankQuery.getFromId(ownedBankId);
     }
 
     public UUID getUuid() {
@@ -102,7 +104,7 @@ public class Currency {
     }
 
     public boolean isOwner(Player player) {
-        return ownedBank.isOwner(player);
+        return getOwnedBank().isOwner(player);
     }
 
     public double getValue() {

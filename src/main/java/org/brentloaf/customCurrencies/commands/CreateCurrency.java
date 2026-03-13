@@ -1,5 +1,6 @@
 package org.brentloaf.customCurrencies.commands;
 
+import org.brentloaf.customCurrencies.services.bank.Bank;
 import org.brentloaf.customCurrencies.services.bank.OldBank;
 import org.brentloaf.customCurrencies.services.bank.BankService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
@@ -81,9 +82,9 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        OldBank bank = BankService.getBank(player);
+        Bank bank = BankService.getBank(player);
         Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
-        bank.addCurrency(newCurrency);
+        bank.addCurrency(newCurrency.getUuid());
         CurrencyRegistry.addCurrency(newCurrency);
         RegisterBankVault.addCurrencyToListen(player, newCurrency);
         player.sendMessage(ChatColor.GREEN + "You have created the currency " + currencyName + ", please select a vault location by right-clicking a barrel.");
