@@ -3,34 +3,25 @@ package org.brentloaf.customCurrencies.services.bank;
 import org.brentloaf.customCurrencies.database.Database;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BankService {
 
-    // private static List<OldBank> loadedBanks = new ArrayList<>();
-
-    public static List<OldBank> getLoadedBanks() {
-        return loadedBanks;
-    }
-
     public static void addBank(String name, Player owner) {
-        Database.Bank.add(owner.getUniqueId(), name);
+        Database.BankQuery.add(owner.getUniqueId(), name);
     }
 
     public static boolean hasBank(Player player) {
-        return loadedBanks.stream().anyMatch(b -> b.getOwnerUUID().equals(player.getUniqueId()));
+        return Database.BankQuery.getFromPlayer(player) != null;
     }
 
-    public static OldBank getBank(String bankName) {
-        return loadedBanks.stream().filter(b -> b.getName().equals(bankName)).toList().getFirst();
+    public static Bank getBank(String bankName) {
+        return Database.BankQuery.getFromName(bankName);
     }
 
-    public static OldBank getBank(Player player) {
-        return loadedBanks.stream().filter(b -> b.getOwnerUUID().equals(player.getUniqueId())).toList().getFirst();
+    public static Bank getBank(Player player) {
+        return Database.BankQuery.getFromPlayer(player);
     }
 
-    public static boolean nameTaken(String string) {
-        return loadedBanks.stream().anyMatch(b -> b.getRawName().equalsIgnoreCase(string.replace(" ", "_")));
+    public static boolean nameTaken(String bankName) {
+        return Database.BankQuery.getFromName(bankName) != null;
     }
 }

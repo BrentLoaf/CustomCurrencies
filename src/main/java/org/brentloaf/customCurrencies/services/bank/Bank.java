@@ -17,6 +17,6 @@ public record Bank(String name, UUID ownerId, UUID id, List<UUID> currencies) {
     }
 
     public void addCurrency(UUID currencyId) {
-        Database.Bank.addCurrency(id, currencyId);
+        Database.BankQuery.addCurrency(id, currencyId);
     }
 }
