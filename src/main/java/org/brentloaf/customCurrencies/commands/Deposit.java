@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
 import org.brentloaf.customCurrencies.services.account.Account;
-import org.brentloaf.customCurrencies.services.account.AccountRegistry;
+import org.brentloaf.customCurrencies.services.account.AccountService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
 import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
@@ -56,7 +56,7 @@ public class Deposit implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Account account = AccountRegistry.getAccount(player);
+        Account account = AccountService.getAccount(player);
         account.deposit(player, currency, depoAmount);
         player.sendMessage(ChatColor.GREEN + "You have deposited " + depoAmount + " " + currency.getName() + "(s).");
         return true;

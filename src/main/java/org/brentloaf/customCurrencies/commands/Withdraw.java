@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
 import org.brentloaf.customCurrencies.services.account.Account;
-import org.brentloaf.customCurrencies.services.account.AccountRegistry;
+import org.brentloaf.customCurrencies.services.account.AccountService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
 import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
@@ -50,7 +50,7 @@ public class Withdraw implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Account account = AccountRegistry.getAccount(player);
+        Account account = AccountService.getAccount(player);
         int currentAmount = account.get(currency);
         if (currentAmount < withAmount) {
             player.sendMessage(ChatColor.RED + "You only have " + currentAmount + " to withdraw.");

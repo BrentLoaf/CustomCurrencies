@@ -1,7 +1,6 @@
 package org.brentloaf.customCurrencies.commands;
 
 import org.brentloaf.customCurrencies.services.bank.Bank;
-import org.brentloaf.customCurrencies.services.bank.OldBank;
 import org.brentloaf.customCurrencies.services.bank.BankService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
 import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;

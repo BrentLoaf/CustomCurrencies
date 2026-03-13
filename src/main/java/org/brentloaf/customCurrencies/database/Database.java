@@ -2,31 +2,124 @@ package org.brentloaf.customCurrencies.database;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import org.brentloaf.customCurrencies.services.account.Account;
 import org.brentloaf.customCurrencies.services.bank.Bank;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Database {
 
     private static Connection connection;
+    private static final Gson gson = new Gson();
 
     public Database(String path) throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:" + path);
 
         try (Statement statement = connection.createStatement()) {
+            AccountQuery.init(statement);
             BankQuery.init(statement);
+        }
+    }
+
+    public static class AccountQuery {
+
+        private static final String TABLE_NAME = "accountTable";
+
+        private static void init(Statement statement) throws SQLException {
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS accountTable (
+                    ownerId TEXT NOT NULL,
+                    balances TEXT NOT NULL,
+                    PRIMARY KEY (ownerId)
+                )
+            """);
+        }
+
+        public static @NotNull Account get(UUID ownerId) {
+            String sql = "SELECT balances FROM " + TABLE_NAME + " WHERE ownerId = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, ownerId.toString());
+
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        return new Account(ownerId, fromJson(result.getString()));
+                    } else {
+                        add(ownerId);
+                        return new Account(ownerId, new HashMap<>());
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static void add(UUID ownerId) {
+            String sql = "INSERT OR IGNORE INTO " + TABLE_NAME + " (ownerId, balances) VALUES (?, ?)";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, ownerId.toString());
+                statement.setString(2, "{}");
+
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static HashMap<UUID, Integer> getBalance(UUID ownerId) {
+            String sql = "SELECT balances FROM " + TABLE_NAME + " WHERE ownerId = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, ownerId.toString());
+
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        return fromJson(result.getString(1));
+                    } else {
+                        add(ownerId);
+                        return new HashMap<>();
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static void setBalance(UUID ownerId, HashMap<UUID, Integer> balances) {
+            String sql = "UPDATE " + TABLE_NAME + " SET balances = ? WHERE ownerId = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, toJson(balances));
+                statement.setString(2, ownerId.toString());
+
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private static HashMap<UUID, Integer> fromJson(String json) {
+            if (json == null || json.isBlank()) return new HashMap<>();
+            Type type = new TypeToken<HashMap<UUID, Integer>>(){}.getType();
+
+            return new HashMap<>(gson.fromJson(json, type));
+        }
+
+        public static String toJson(HashMap<UUID, Integer> balances) {
+            if (balances == null || balances.isEmpty()) return "{}";
+            return gson.toJson(balances);
         }
     }
 
     public static class BankQuery {
 
-        public static final String TABLE_NAME = "bankTable";
+        private static final String TABLE_NAME = "bankTable";
 
         private static void init(Statement statement) throws SQLException {
             statement.execute("""
@@ -35,7 +128,7 @@ public class Database {
                     bankName TEXT NOT NULL,
                     ownerId TEXT NOT NULL,
                     currenciesIds TEXT NOT NULL,
-                    PRIMARY KEY (id, bankName, ownerId)
+                    PRIMARY KEY (id)
                 )
             """);
         }
@@ -72,7 +165,7 @@ public class Database {
             }
 
             currencies.add(currencyId);
-            String updatedJson = new Gson().toJson(currencies);
+            String updatedJson = gson.toJson(currencies);
 
             String sqlUpdate = "UPDATE " + TABLE_NAME + " SET currenciesIds = ? WHERE id = ?";
 
@@ -163,11 +256,9 @@ public class Database {
             return bank;
         }
 
-        private static final Gson gson = new Gson();
-
         private static List<UUID> fromJson(String json) {
             if (json == null || json.isBlank()) return new ArrayList<>();
-            Type type = new TypeToken<List<String>>(){}.getType();
+            Type type = new TypeToken<List<UUID>>(){}.getType();
 
             return new ArrayList<>(gson.fromJson(json, type));
         }

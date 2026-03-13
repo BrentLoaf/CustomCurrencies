@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
 import org.brentloaf.customCurrencies.services.account.Account;
-import org.brentloaf.customCurrencies.services.account.AccountRegistry;
+import org.brentloaf.customCurrencies.services.account.AccountService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
 import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
@@ -41,7 +41,7 @@ public class GetBalance implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Account account = AccountRegistry.getAccount(player);
+        Account account = AccountService.getAccount(player);
         int amount = account.get(currency);
         player.sendMessage(ChatColor.GREEN + "Your balance for " + currency.getName() + " is " + amount + " coins.");
         return true;

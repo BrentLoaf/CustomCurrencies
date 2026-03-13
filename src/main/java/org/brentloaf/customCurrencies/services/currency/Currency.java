@@ -3,7 +3,6 @@ package org.brentloaf.customCurrencies.services.currency;
 import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.brentloaf.customCurrencies.database.Database;
 import org.brentloaf.customCurrencies.services.bank.Bank;
-import org.brentloaf.customCurrencies.services.bank.OldBank;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
