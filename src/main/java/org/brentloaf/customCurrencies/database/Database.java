@@ -48,7 +48,7 @@ public class Database {
 
                 try (ResultSet result = statement.executeQuery()) {
                     if (result.next()) {
-                        return new Account(ownerId, fromJson(result.getString()));
+                        return new Account(ownerId, fromJson(result.getString(1)));
                     } else {
                         add(ownerId);
                         return new Account(ownerId, new HashMap<>());
