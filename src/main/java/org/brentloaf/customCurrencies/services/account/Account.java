@@ -1,6 +1,6 @@
-package org.brentloaf.customCurrencies.account;
+package org.brentloaf.customCurrencies.services.account;
 
-import org.brentloaf.customCurrencies.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.Currency;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

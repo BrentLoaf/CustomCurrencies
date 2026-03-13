@@ -1,9 +1,9 @@
 package org.brentloaf.customCurrencies.commands;
 
-import org.brentloaf.customCurrencies.bank.Bank;
-import org.brentloaf.customCurrencies.bank.BankRegistry;
-import org.brentloaf.customCurrencies.currency.Currency;
-import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.bank.OldBank;
+import org.brentloaf.customCurrencies.services.bank.BankService;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -37,7 +37,7 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        if (!BankRegistry.hasBank(player)) {
+        if (!BankService.hasBank(player)) {
             player.sendMessage(ChatColor.RED + "You must create a bank before creating a currency.");
             return false;
         }
@@ -81,7 +81,7 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Bank bank = BankRegistry.getBank(player);
+        OldBank bank = BankService.getBank(player);
         Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
         bank.addCurrency(newCurrency);
         CurrencyRegistry.addCurrency(newCurrency);

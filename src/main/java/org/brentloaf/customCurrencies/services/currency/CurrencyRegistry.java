@@ -1,4 +1,4 @@
-package org.brentloaf.customCurrencies.currency;
+package org.brentloaf.customCurrencies.services.currency;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.bukkit.Location;

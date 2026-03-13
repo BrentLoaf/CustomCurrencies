@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.listeners;
 
-import org.brentloaf.customCurrencies.currency.Currency;
-import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.brentloaf.customCurrencies.events.ItemDeleteEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

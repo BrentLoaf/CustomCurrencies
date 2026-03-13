@@ -1,8 +1,8 @@
 package org.brentloaf.customCurrencies.listeners;
 
 import net.kyori.adventure.text.Component;
-import org.brentloaf.customCurrencies.currency.Currency;
-import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

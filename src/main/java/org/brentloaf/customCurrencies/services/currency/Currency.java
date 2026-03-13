@@ -1,7 +1,7 @@
-package org.brentloaf.customCurrencies.currency;
+package org.brentloaf.customCurrencies.services.currency;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
-import org.brentloaf.customCurrencies.bank.Bank;
+import org.brentloaf.customCurrencies.services.bank.OldBank;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class Currency {
 
-    private final Bank ownedBank;
+    private final OldBank ownedBank;
 
     private UUID uuid;
     private String name;
@@ -31,7 +31,7 @@ public class Currency {
     private ItemStack coinItem;
     private HashSet<Location> vaultLocations = new HashSet<>();
 
-    public Currency(Bank ownedBank, String name,  Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
+    public Currency(OldBank ownedBank, String name, Material backedMaterial, Material coinMaterial, List<Material> materialIngredients) {
         this.ownedBank = ownedBank;
         this.uuid = UUID.randomUUID();
         this.name = name.replace("_", " ");
@@ -53,7 +53,7 @@ public class Currency {
         Bukkit.addRecipe(recipe);
     }
 
-    public Bank getOwnedBank() {
+    public OldBank getOwnedBank() {
         return ownedBank;
     }
 

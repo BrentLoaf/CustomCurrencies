@@ -1,20 +1,20 @@
-package org.brentloaf.customCurrencies.bank;
+package org.brentloaf.customCurrencies.services.bank;
 
-import org.brentloaf.customCurrencies.currency.Currency;
-import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Bank {
+public class OldBank {
 
     private final UUID ownerUUID;
     private String name;
     private List<UUID> ownedCurrencies = new ArrayList<>();
 
-    public Bank(String name, Player owner) {
+    public OldBank(String name, Player owner) {
         this.name = name;
         this.ownerUUID = owner.getUniqueId();
     }

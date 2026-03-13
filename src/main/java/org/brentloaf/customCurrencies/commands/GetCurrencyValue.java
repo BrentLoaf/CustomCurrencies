@@ -1,9 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
-import org.brentloaf.customCurrencies.bank.Bank;
-import org.brentloaf.customCurrencies.bank.BankRegistry;
-import org.brentloaf.customCurrencies.currency.Currency;
-import org.brentloaf.customCurrencies.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

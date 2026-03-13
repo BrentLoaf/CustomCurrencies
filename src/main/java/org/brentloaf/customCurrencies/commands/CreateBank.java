@@ -1,9 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
-import org.brentloaf.customCurrencies.bank.Bank;
-import org.brentloaf.customCurrencies.bank.BankRegistry;
+import org.brentloaf.customCurrencies.services.bank.BankService;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,18 +32,17 @@ public class CreateBank implements CommandExecutor, TabCompleter {
         }
 
         String bankName = strings[0].replace("_", " ");
-        if (BankRegistry.nameTaken(bankName)) {
+        if (BankService.nameTaken(bankName)) {
             player.sendMessage(ChatColor.RED + "This bank name already taken.");
             return false;
         }
 
-        if (BankRegistry.hasBank(player)) {
+        if (BankService.hasBank(player)) {
             player.sendMessage(ChatColor.RED + "You can only own a single bank at a time.");
             return false;
         }
 
-        Bank bank = new Bank(bankName, player);
-        BankRegistry.addBank(bank);
+        BankService.addBank(bankName, player);
         player.sendMessage(ChatColor.GREEN + "You have created the bank " + bankName + ".");
         return true;
     }

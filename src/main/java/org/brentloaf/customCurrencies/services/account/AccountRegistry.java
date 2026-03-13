@@ -1,4 +1,4 @@
-package org.brentloaf.customCurrencies.account;
+package org.brentloaf.customCurrencies.services.account;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
