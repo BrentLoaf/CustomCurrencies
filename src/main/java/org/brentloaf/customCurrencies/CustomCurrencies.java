@@ -22,7 +22,7 @@ public final class CustomCurrencies extends JavaPlugin {
             File folder = plugin.getDataFolder();
             if (!folder.exists()) folder.mkdirs();
 
-            database = new Database(folder.getAbsolutePath() + "/playerToons.db");
+            database = new Database(folder.getAbsolutePath() + "/currencyData.db");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
