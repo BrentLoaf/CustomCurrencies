@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.listeners;
 
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.brentloaf.customCurrencies.events.ItemDeleteEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,7 +14,7 @@ public class ItemDeleteListener implements Listener {
     public void onItemDelete(ItemDeleteEvent event) {
         ItemStack itemDeleted = event.getItem();
 
-        Currency currency = CurrencyRegistry.getFromItem(itemDeleted);
+        Currency currency = CurrencyService.getFromItem(itemDeleted);
         if (currency == null) return;
 
         int amountDeleted = event.getAmount();

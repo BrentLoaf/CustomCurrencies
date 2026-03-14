@@ -1,6 +1,7 @@
 package org.brentloaf.customCurrencies.services.currency;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
+import org.brentloaf.customCurrencies.database.Database;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -13,12 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class CurrencyRegistry {
+public class CurrencyService {
 
-    private static HashSet<Currency> loadedCurrencies = new HashSet<>();
-
-    public static HashSet<Currency> getLoadedCurrencies() {
-        return loadedCurrencies;
+    public static HashSet<Currency> getAllCurrencies() {
+        return Database.CurrencyQuery.getAll();
     }
 
     public static void addCurrency(Currency currency) {
@@ -26,19 +25,19 @@ public class CurrencyRegistry {
     }
 
     public static @Nullable Currency getFromUuid(UUID uuid) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getUuid().equals(uuid)).toList();
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.id().equals(uuid)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
     }
 
     public static @Nullable Currency getFromName(String name) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getRawName().equalsIgnoreCase(name)).toList();
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.rawName().equalsIgnoreCase(name)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
     }
 
     public static @Nullable Currency getFromCraftKey(NamespacedKey key) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.getCraftingKey().equals(key)).toList();
+        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.craftKey().equals(key)).toList();
         if (currencies.isEmpty()) return null;
         return currencies.getFirst();
     }
@@ -61,6 +60,6 @@ public class CurrencyRegistry {
     }
 
     public static boolean nameTaken(String string) {
-        return loadedCurrencies.stream().anyMatch(c -> c.getRawName().equalsIgnoreCase(string.replace(" ", "_")));
+        return loadedCurrencies.stream().anyMatch(c -> c.rawName().equalsIgnoreCase(string.replace(" ", "_")));
     }
 }

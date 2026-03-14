@@ -2,7 +2,7 @@ package org.brentloaf.customCurrencies.listeners;
 
 import net.kyori.adventure.text.Component;
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,7 +45,7 @@ public class RegisterBankVault implements Listener {
         }
 
         Location selectedLocation = clickedBlock.getLocation();
-        if (CurrencyRegistry.hasVault(selectedLocation)) {
+        if (CurrencyService.hasVault(selectedLocation)) {
             player.sendMessage(ChatColor.YELLOW + "Vault locations can only be selected once.");
             return;
         }

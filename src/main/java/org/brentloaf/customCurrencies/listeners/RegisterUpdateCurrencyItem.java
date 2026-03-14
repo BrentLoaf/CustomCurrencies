@@ -2,7 +2,7 @@ package org.brentloaf.customCurrencies.listeners;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -24,7 +24,7 @@ public class RegisterUpdateCurrencyItem implements Listener {
             for (ItemStack item : items) {
                 if (item == null || item.getType() == Material.AIR) continue;
 
-                Currency currency = CurrencyRegistry.getFromItem(item);
+                Currency currency = CurrencyService.getFromItem(item);
                 if (currency == null) continue;
 
                 currency.updateItem(item);
@@ -39,7 +39,7 @@ public class RegisterUpdateCurrencyItem implements Listener {
         for (ItemStack item : items) {
             if (item == null || item.getType() == Material.AIR) continue;
 
-            Currency currency = CurrencyRegistry.getFromItem(item);
+            Currency currency = CurrencyService.getFromItem(item);
             if (currency == null) continue;
 
             currency.updateItem(item);
@@ -50,7 +50,7 @@ public class RegisterUpdateCurrencyItem implements Listener {
     public void onItemPickup(EntityPickupItemEvent event) {
         ItemStack item = event.getItem().getItemStack();
 
-        Currency currency = CurrencyRegistry.getFromItem(item);
+        Currency currency = CurrencyService.getFromItem(item);
         if (currency == null) return;
 
         currency.updateItem(item);

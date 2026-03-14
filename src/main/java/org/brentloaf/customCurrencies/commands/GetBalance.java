@@ -3,7 +3,7 @@ package org.brentloaf.customCurrencies.commands;
 import org.brentloaf.customCurrencies.services.account.Account;
 import org.brentloaf.customCurrencies.services.account.AccountService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,7 +35,7 @@ public class GetBalance implements CommandExecutor, TabCompleter {
         }
 
         String currencyName = strings[0];
-        Currency currency = CurrencyRegistry.getFromName(currencyName);
+        Currency currency = CurrencyService.getFromName(currencyName);
         if (currency == null) {
             player.sendMessage(ChatColor.RED + "The currency " + currencyName + " was not found.");
             return false;
@@ -52,7 +52,7 @@ public class GetBalance implements CommandExecutor, TabCompleter {
         int argLength = strings.length;
 
         return switch (argLength) {
-            case 1 -> CurrencyRegistry.getLoadedCurrencies().stream().map(Currency::getRawName).toList();
+            case 1 -> CurrencyService.getLoadedCurrencies().stream().map(Currency::getRawName).toList();
             default -> List.of();
         };
     }

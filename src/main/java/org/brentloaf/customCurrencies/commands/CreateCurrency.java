@@ -3,7 +3,7 @@ package org.brentloaf.customCurrencies.commands;
 import org.brentloaf.customCurrencies.services.bank.Bank;
 import org.brentloaf.customCurrencies.services.bank.BankService;
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
         }
 
         String currencyName = strings[0].replace("_", " ");
-        if (CurrencyRegistry.nameTaken(currencyName)) {
+        if (CurrencyService.nameTaken(currencyName)) {
             player.sendMessage(ChatColor.RED + "This currency name already taken.");
             return false;
         }
@@ -84,7 +84,7 @@ public class CreateCurrency implements CommandExecutor, TabCompleter {
         Bank bank = BankService.getBank(player);
         Currency newCurrency = new Currency(bank, currencyName, backedMaterial, itemMaterial, materialIngredients);
         bank.addCurrency(newCurrency.getUuid());
-        CurrencyRegistry.addCurrency(newCurrency);
+        CurrencyService.addCurrency(newCurrency);
         RegisterBankVault.addCurrencyToListen(player, newCurrency);
         player.sendMessage(ChatColor.GREEN + "You have created the currency " + currencyName + ", please select a vault location by right-clicking a barrel.");
         return true;

@@ -4,6 +4,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import org.brentloaf.customCurrencies.services.account.Account;
 import org.brentloaf.customCurrencies.services.bank.Bank;
+import org.brentloaf.customCurrencies.services.currency.Currency;
+import org.brentloaf.customCurrencies.services.currency.Vault;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +26,101 @@ public class Database {
         try (Statement statement = connection.createStatement()) {
             AccountQuery.init(statement);
             BankQuery.init(statement);
+        }
+    }
+
+    public static class CurrencyQuery {
+
+        private static final String TABLE_NAME = "currencyTable";
+
+        private static void init(Statement statement) throws SQLException {
+            statement.execute("""
+                CREATE TABLE IF NOT EXISTS currencyTable (
+                    ownedBank TEXT NOT NULL,
+                    id TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    backedMaterial TEXT NOT NULL,
+                    coinMaterial TEXT NOT NULL,
+                    materialIngredients TEXT NOT NULL,
+                    inCirculation INTEGER NOT NULL DEFAULT 0,
+                    vaultLocations TEXT NOT NULL,
+                    PRIMARY KEY (id)
+                )
+            """);
+        }
+
+        public static void add(Currency currency) {
+            String sql = "INSERT INTO " + TABLE_NAME + " (ownedBank, id, name, backedMaterial, coinMaterial, materialIngredients, inCirculation, vaultLocations) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " + TABLE_NAME + " WHERE id = ?";
+
+
+        }
+
+        public static HashSet<Currency> getAll() {
+            String sql = "PRAGMA table_info(" + TABLE_NAME + ")";
+
+            HashSet<Currency> currencies = new HashSet<>();
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                try (ResultSet result = statement.executeQuery()) {
+                    while (result.next()) {
+                        currencies.add(get(UUID.fromString(result.getString("id"))));
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            return currencies;
+        }
+
+        public static @Nullable Currency get(UUID id) {
+            String sql = "SELECT ownedBank, id, name, backedMaterial, coinMaterial, materialIngredients, inCirculation, vaultLocations FROM " + TABLE_NAME + " WHERE id = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, id.toString());
+
+                try (ResultSet result = statement.executeQuery()) {
+                    if (result.next()) {
+                        UUID ownedBank = UUID.fromString(result.getString(1));
+                        String name = result.getString(3);
+                        Material backedMaterial = Material.valueOf(result.getString(4));
+                        Material coinMaterial = Material.valueOf(result.getString(5));
+                        List<Material> materialIngredients = fromJsonMaterials(result.getString(6));
+                        int inCirculation = result.getInt(7);
+                        HashSet<Vault> vaultLocations = fromJsonVaults(result.getString(8));
+
+                        return new Currency(ownedBank, id, name, backedMaterial, coinMaterial, materialIngredients, inCirculation, vaultLocations);
+                    } else {
+                        return null;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private static List<Material> fromJsonMaterials(String json) {
+            if (json == null || json.isBlank()) return new ArrayList<>();
+            Type type = new TypeToken<List<Material>>(){}.getType();
+
+            return new ArrayList<>(gson.fromJson(json, type));
+        }
+
+        public static String toJsonMaterials(List<Material> materials) {
+            if (materials == null || materials.isEmpty()) return "[]";
+            return gson.toJson(materials);
+        }
+
+        private static HashSet<Vault> fromJsonVaults(String json) {
+            if (json == null || json.isBlank()) return new HashSet<>();
+            Type type = new TypeToken<HashSet<Vault>>(){}.getType();
+
+            return new HashSet<>(gson.fromJson(json, type));
+        }
+
+        public static String toJsonVaults(HashSet<Vault> vaults) {
+            if (vaults == null || vaults.isEmpty()) return "[]";
+            return gson.toJson(vaults);
         }
     }
 

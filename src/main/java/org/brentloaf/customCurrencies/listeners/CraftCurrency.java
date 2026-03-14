@@ -2,7 +2,7 @@ package org.brentloaf.customCurrencies.listeners;
 
 import org.brentloaf.customCurrencies.CustomCurrencies;
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +23,7 @@ public class CraftCurrency implements Listener {
         if (!(event.getRecipe() instanceof Keyed keyed)) return;
         NamespacedKey craftingKey = keyed.getKey();
 
-        Currency currency = CurrencyRegistry.getFromCraftKey(craftingKey);
+        Currency currency = CurrencyService.getFromCraftKey(craftingKey);
         if (currency == null) return;
 
         if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -71,7 +71,7 @@ public class CraftCurrency implements Listener {
         Keyed keyed = event.getRecipe();
         NamespacedKey craftingKey = keyed.getKey();
 
-        Currency currency = CurrencyRegistry.getFromCraftKey(craftingKey);
+        Currency currency = CurrencyService.getFromCraftKey(craftingKey);
         if (currency != null) event.setCancelled(true);
     }
 

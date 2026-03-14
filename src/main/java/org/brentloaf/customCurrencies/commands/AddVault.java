@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.commands;
 
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.brentloaf.customCurrencies.listeners.RegisterBankVault;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -34,7 +34,7 @@ public class AddVault implements CommandExecutor, TabCompleter {
         }
 
         String currencyName = strings[0];
-        Currency currency = CurrencyRegistry.getFromName(currencyName);
+        Currency currency = CurrencyService.getFromName(currencyName);
         if (currency == null) {
             player.sendMessage(ChatColor.RED + "The currency " + currencyName + " was not found.");
             return false;
@@ -56,7 +56,7 @@ public class AddVault implements CommandExecutor, TabCompleter {
         int argLength = strings.length;
 
         return switch (argLength) {
-            case 1 -> CurrencyRegistry.getLoadedCurrencies().stream().filter(c -> c.isOwner(player)).map(Currency::getRawName).toList();
+            case 1 -> CurrencyService.getLoadedCurrencies().stream().filter(c -> c.isOwner(player)).map(Currency::getRawName).toList();
             default -> List.of();
         };
     }

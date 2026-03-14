@@ -1,7 +1,7 @@
 package org.brentloaf.customCurrencies.listeners;
 
 import org.brentloaf.customCurrencies.services.currency.Currency;
-import org.brentloaf.customCurrencies.services.currency.CurrencyRegistry;
+import org.brentloaf.customCurrencies.services.currency.CurrencyService;
 import org.brentloaf.customCurrencies.events.ItemUseEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class ItemUseListener implements Listener {
         ItemStack itemStack = event.getItemStack();
         if (itemStack == null) return;
 
-        Currency currency = CurrencyRegistry.getFromItem(itemStack);
+        Currency currency = CurrencyService.getFromItem(itemStack);
         if (currency == null) return;
 
         Class<? extends Event> classType = event.getClassType();
