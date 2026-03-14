@@ -25,7 +25,7 @@ public class CurrencyService {
     }
 
     public static @Nullable Currency getFromId(UUID id) {
-        return Database.CurrencyQuery.get(id)
+        return Database.CurrencyQuery.get(id);
     }
 
     public static @Nullable Currency getFromName(String name) {
