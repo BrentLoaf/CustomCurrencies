@@ -52,7 +52,20 @@ public class Database {
         public static void add(Currency currency) {
             String sql = "INSERT INTO " + TABLE_NAME + " (ownedBank, id, name, backedMaterial, coinMaterial, materialIngredients, inCirculation, vaultLocations) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " + TABLE_NAME + " WHERE id = ?";
 
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, currency.ownedBank().toString());
+                statement.setString(2, currency.id().toString());
+                statement.setString(3, currency.name());
+                statement.setString(4, currency.backedMaterial().name());
+                statement.setString(5, currency.coinMaterial().name());
+                statement.setString(6, toJsonMaterials(currency.materialIngredients()));
+                statement.setInt(7, currency.inCirculation());
+                statement.setString(8, toJsonVaults(currency.vaultLocations()));
 
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public static HashSet<Currency> getAll() {

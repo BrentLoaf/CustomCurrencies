@@ -21,13 +21,11 @@ public class CurrencyService {
     }
 
     public static void addCurrency(Currency currency) {
-        loadedCurrencies.add(currency);
+        Database.CurrencyQuery.add(currency);
     }
 
-    public static @Nullable Currency getFromUuid(UUID uuid) {
-        List<Currency> currencies = loadedCurrencies.stream().filter(c -> c.id().equals(uuid)).toList();
-        if (currencies.isEmpty()) return null;
-        return currencies.getFirst();
+    public static @Nullable Currency getFromId(UUID id) {
+        return Database.CurrencyQuery.get(id)
     }
 
     public static @Nullable Currency getFromName(String name) {
